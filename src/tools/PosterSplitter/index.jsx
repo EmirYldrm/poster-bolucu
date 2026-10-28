@@ -27,8 +27,8 @@ export default function PosterSplitter() {
   const [fit, setFit] = useState('contain');
   const [mode, setMode] = useState('collage');
   const [pageOri, setPageOri] = useState('auto');
-  const [margin, setMargin] = useState(5);
-  const [overlap, setOverlap] = useState(10);
+  const [margin, setMargin] = useState(0);
+  const [overlap, setOverlap] = useState(0);
   const [smart, setSmart] = useState(true);
   const [tol, setTol] = useState(10);
   const [opts, setOpts] = useState({ marks: true, labels: true, guide: true });
