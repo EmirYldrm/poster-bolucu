@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: 243 245 247; --card: 255 255 255; --ink: 15 26 42; --muted: 96 110 130;
+  --line: 214 220 227; --cyan: 0 120 170; --magenta: 214 0 127; --onacc: 255 255 255;
+}
+.dark {
+  --paper: 14 19 27; --card: 21 28 39; --ink: 232 237 243; --muted: 139 151 168;
+  --line: 38 49 67; --cyan: 61 184 235; --magenta: 255 77 166; --onacc: 8 14 22;
+}
+body { @apply bg-paper text-ink font-body antialiased; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
