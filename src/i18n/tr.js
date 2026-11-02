@@ -81,6 +81,15 @@ export default {
   'item.dpi': 'Yaklaşık {dpi} DPI',
   'dpi.warn': 'Çözünürlük düşük: efektif DPI {dpi}. Baskı kalitesi düşük olacak.',
 
+  'smart.title': 'Akıllı Silgi',
+  'smart.hint': 'Silmek istediğiniz isim veya logonun çevresini fareyle dikdörtgen olarak seçin. Alan, çevresindeki piksellerle doldurulur.',
+  'smart.erase': 'Seçili alanı sil',
+  'smart.undo': 'Geri al',
+  'smart.clear': 'Seçimi temizle',
+  'smart.apply': 'Önizlemeyi uygula',
+  'smart.open': 'Akıllı Silgi',
+  'smart.error': 'Alan işlenemedi: {msg}',
+
   'preview.zoom': 'Yakınlaştırma',
   'preview.hint': 'Bir parçaya tıklayarak A4 sayfasını inceleyin. Macenta alanlar bindirmedir.',
   'preview.poster': 'Poster {n}',

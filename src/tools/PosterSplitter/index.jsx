@@ -8,6 +8,7 @@ import ImageUploader from '../../components/ImageUploader';
 import Stepper from '../../components/Stepper';
 import PosterCanvas from '../../components/PosterCanvas';
 import PieceModal from '../../components/PieceModal';
+import SmartEraserModal from '../../components/SmartEraserModal';
 import NumberField from '../../components/NumberField';
 import { Section, Seg, Check, Btn, Field } from '../../components/ui';
 
@@ -17,7 +18,7 @@ const oriLabel = (o) => (o === 'landscape' ? t('size.landscape') : t('size.portr
 export default function PosterSplitter() {
   const [step, setStep] = useState(0);
   const [maxStep, setMaxStep] = useState(0);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [size, setSize] = useState({ w: 500, h: 700 }); // mm
@@ -37,6 +38,7 @@ export default function PosterSplitter() {
   const [zoom, setZoom] = useState(1);
   const [piece, setPiece] = useState(null);
   const [progress, setProgress] = useState(null);
+  const [smartItem, setSmartItem] = useState(null);
 
   const effFit = lock ? fit : 'stretch';
   const separate = mode === 'separate';
@@ -100,6 +102,7 @@ export default function PosterSplitter() {
   }
 
   const patch = (id, p) => setItems((l) => l.map((i) => (i.id === id ? { ...i, ...p } : i)));
+  const applySmartEraser = (id, changes) => patch(id, changes);
   const remove = (id) => {
     const it = items.find((i) => i.id === id);
     if (it) URL.revokeObjectURL(it.url);
@@ -228,6 +231,7 @@ export default function PosterSplitter() {
                   <p className="truncate text-sm font-medium">{it.name}</p>
                   <p className="text-xs text-muted">{t('upload.info', { w: it.nw, h: it.nh, mp: round((it.nw * it.nh) / 1e6, 1), dpi: Math.round(effectiveDpi(it)) })}</p>
                 </div>
+                <Btn variant="ghost" onClick={() => setSmartItem(it)}>{t('smart.open')}</Btn>
                 <Btn variant="ghost" onClick={() => remove(it.id)}>{t('btn.remove')}</Btn>
               </li>
             ))}
@@ -295,6 +299,7 @@ export default function PosterSplitter() {
                       <Btn variant="ghost" onClick={() => rotate(selected.id)}>{t('item.rotate')}</Btn>
                       <Btn variant="ghost" onClick={() => reorder(selected.id, 'front')}>{t('item.front')}</Btn>
                       <Btn variant="ghost" onClick={() => reorder(selected.id, 'back')}>{t('item.back')}</Btn>
+                      <Btn variant="ghost" onClick={() => setSmartItem(selected)}>{t('smart.open')}</Btn>
                       <Btn variant="ghost" onClick={() => remove(selected.id)}>{t('btn.remove')}</Btn>
                     </div>
                   </>
@@ -355,6 +360,13 @@ export default function PosterSplitter() {
       )}
 
       {piece && step === 2 && <PieceModal piece={piece} split={split} items={poster.items} onClose={() => setPiece(null)} onStep={stepPiece} />}
+      {smartItem && (
+        <SmartEraserModal
+          item={items.find((it) => it.id === smartItem.id) || smartItem}
+          onApply={applySmartEraser}
+          onClose={() => setSmartItem(null)}
+        />
+      )}
     </div>
   );
 }
