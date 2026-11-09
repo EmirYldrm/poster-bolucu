@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { t } from './i18n';
 import { tools } from './tools';
 import Home from './pages/Home';
@@ -36,7 +36,9 @@ export default function App() {
         {Tool ? (
           <>
             <h1 className="mb-4 font-display text-2xl font-bold">{t(tool.titleKey)}</h1>
-            <Tool />
+            <Suspense fallback={<p className="text-sm text-muted">{t('tool.loading')}</p>}>
+              <Tool />
+            </Suspense>
           </>
         ) : <Home />}
       </main>
