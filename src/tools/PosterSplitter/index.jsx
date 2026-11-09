@@ -359,7 +359,7 @@ export default function PosterSplitter() {
         </div>
       )}
 
-      {piece && step === 2 && <PieceModal piece={piece} split={split} items={poster.items} onClose={() => setPiece(null)} onStep={stepPiece} />}
+      {piece && step === 2 && <PieceModal piece={piece} spli mn t={split} items={poster.items} onClose={() => setPiece(null)} onStep={stepPiece} />}
       {smartItem && (
         <SmartEraserModal
           item={items.find((it) => it.id === smartItem.id) || smartItem}
