@@ -1,13 +1,15 @@
 import { lazy } from 'react';
 import PosterSplitter from './PosterSplitter';
 const PdfMerge = lazy(() => import('./pdf-merge'));
+const ImageToPdf = lazy(() => import('./image-to-pdf'));
 
 // Yeni araç eklemek: klasör aç, buraya kayıt ekle. ready:false olanlar ana sayfada "Yakında" görünür.
 export const tools = [
-  { id: 'poster', path: '/poster-bolucu', titleKey: 'tool.poster.title', descKey: 'tool.poster.desc', component: PosterSplitter, ready: true },
-  { id: 'pdf-merge', path: '/pdf-birlestirici', titleKey: 'tool.pdfMerge.title', descKey: 'tool.pdfMerge.desc', component: PdfMerge, ready: true },
-  { id: 'crop', path: '/gorsel-kirpma', titleKey: 'tool.crop.title', descKey: 'tool.crop.desc', ready: false },
-  { id: 'dpi', path: '/dpi', titleKey: 'tool.dpi.title', descKey: 'tool.dpi.desc', ready: false },
-  { id: 'collage', path: '/kolaj', titleKey: 'tool.collage.title', descKey: 'tool.collage.desc', ready: false },
-  { id: 'frame', path: '/cerceve', titleKey: 'tool.frame.title', descKey: 'tool.frame.desc', ready: false },
+  { id: 'poster', icon: 'poster', path: '/poster-bolucu', titleKey: 'tool.poster.title', descKey: 'tool.poster.desc', component: PosterSplitter, ready: true },
+  { id: 'pdf-merge', icon: 'pdfMerge', path: '/pdf-birlestirici', titleKey: 'tool.pdfMerge.title', descKey: 'tool.pdfMerge.desc', component: PdfMerge, ready: true },
+  { id: 'image-to-pdf', icon: 'imageToPdf', path: '/gorselden-pdf', titleKey: 'tool.imageToPdf.title', descKey: 'tool.imageToPdf.desc', component: ImageToPdf, ready: true },
+  { id: 'crop', icon: 'crop', path: '/gorsel-kirpma', titleKey: 'tool.crop.title', descKey: 'tool.crop.desc', ready: false },
+  { id: 'dpi', icon: 'dpi', path: '/dpi', titleKey: 'tool.dpi.title', descKey: 'tool.dpi.desc', ready: false },
+  { id: 'collage', icon: 'collage', path: '/kolaj', titleKey: 'tool.collage.title', descKey: 'tool.collage.desc', ready: false },
+  { id: 'frame', icon: 'frame', path: '/cerceve', titleKey: 'tool.frame.title', descKey: 'tool.frame.desc', ready: false },
 ];

@@ -82,7 +82,7 @@ export default function PosterSplitter() {
     setError('');
     const loaded = [];
     for (const f of files) {
-      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { setError(t('err.format', { name: f.name })); continue; }
+      if (!/^image\/(jpeg|png)$/.test(f.type) && !/\.(jpe?g|png)$/i.test(f.name)) { setError(t('err.format', { name: f.name })); continue; }
       try { loaded.push(await loadImage(f)); } catch { setError(t('err.decode', { name: f.name })); }
       await tick();
     }

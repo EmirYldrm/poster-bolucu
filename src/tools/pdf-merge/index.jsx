@@ -16,6 +16,11 @@ import { inspectPdf, queuePdfThumbnail } from './lib/pdfPreview';
 
 const fileId = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
 const isPdf = (file) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+const hasPdfHeader = async (file) => {
+  if (!file || file.size <= 0) return false;
+  const bytes = new Uint8Array(await file.slice(0, 5).arrayBuffer());
+  return bytes.length >= 5 && bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46 && bytes[4] === 0x2d;
+};
 const pdfErrorKey = (error) => (
   error?.name === 'PasswordException' || /password|encrypt/i.test(error?.message || '')
     ? 'pdfMerge.slot.encrypted'
@@ -110,8 +115,15 @@ export default function PdfMerge() {
   const addFiles = useCallback(async (fileList) => {
     const files = Array.from(fileList || []);
     if (!files.length) return;
-    const accepted = files.filter(isPdf);
-    const hasInvalid = accepted.length !== files.length;
+    const accepted = [];
+    const rejected = [];
+    for (const file of files) {
+      if (!isPdf(file)) { rejected.push(file.name); continue; }
+      if (file.size > 50 * 1024 * 1024) { rejected.push(file.name); continue; }
+      if (!(await hasPdfHeader(file))) { rejected.push(file.name); continue; }
+      accepted.push(file);
+    }
+    const hasInvalid = rejected.length > 0;
     if (hasInvalid && !accepted.length) showToast(t('pdfMerge.invalid'));
     if (!accepted.length) return;
     const newSlots = accepted.map((file) => ({
