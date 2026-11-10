@@ -1,3 +1,22 @@
+const SAFE_IMAGE_LIMITS = { maxFileBytes: 25 * 1024 * 1024, maxPixels: 100 * 1024 * 1024 };
+
+async function assertSafeImage(file) {
+  if (!file || !/^image\/(jpeg|png)$/i.test(file.type || '')) {
+    throw new Error('Yalnızca JPG/JPEG veya PNG dosyası eklenebilir.');
+  }
+  if (file.size > SAFE_IMAGE_LIMITS.maxFileBytes) {
+    throw new Error('Dosya boyutu 25 MB sınırını aşıyor.');
+  }
+
+  const header = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+  const isJpeg = header.length >= 3 && header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
+  const isPng = header.length >= 8 && header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4e && header[3] === 0x47;
+  if (!isJpeg && !isPng) {
+    throw new Error('Dosya içeriği eşleşen JPG/PNG imzası içermiyor.');
+  }
+  return true;
+}
+
 // Poster tuvali yardımcıları. Birim: mm. Öğe (item): {id,name,img,prev,thumb,nw,nh,rot,fit,x,y,w,h}
 export const effDims = (it) => (it.rot % 2 ? { w: it.nh, h: it.nw } : { w: it.nw, h: it.nh });
 
@@ -56,12 +75,16 @@ export function renderRegion(items, x0, y0, w, h, ppm, usePreview = false) {
 
 /** Dosyadan öğe üretir. Önizleme için küçültülmüş kopya tutulur; tam çözünürlük PDF için saklanır. */
 export async function loadImage(file) {
+  await assertSafeImage(file);
   const url = URL.createObjectURL(file);
   const img = new Image();
   img.src = url;
   await img.decode();
   const nw = img.naturalWidth;
   const nh = img.naturalHeight;
+  if (nw * nh > SAFE_IMAGE_LIMITS.maxPixels) {
+    throw new Error('Çok büyük görsel; maksimum piksel sınırı aşılıyor.');
+  }
   const shrink = (max) => {
     const k = Math.min(1, max / Math.max(nw, nh));
     const c = document.createElement('canvas');
